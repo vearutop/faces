@@ -1,6 +1,6 @@
 # faces
 
-[![Time Tracker](https://wakatime.com/badge/github/vearutop/faces.svg)](https://wakatime.com/badge/github/vearutop/faces)
+[![wakatime](https://wakatime.com/badge/user/d4d32a01-9dcc-43f3-96a3-fe3be55e75fd/project/018b8b57-d925-41b0-8f56-b65f8c46b532.svg)](https://wakatime.com/badge/user/d4d32a01-9dcc-43f3-96a3-fe3be55e75fd/project/018b8b57-d925-41b0-8f56-b65f8c46b532)
 ![Code lines](https://sloc.xyz/github/vearutop/faces/?category=code)
 ![Comments](https://sloc.xyz/github/vearutop/faces/?category=comments)
 
