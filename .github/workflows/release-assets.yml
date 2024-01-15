@@ -3,8 +3,6 @@
 # This script uploads application binaries as GitHub release assets.
 name: release-assets
 on:
-  pull_request:
-
   release:
     types:
       - created
