@@ -37,6 +37,16 @@ linters:
     - tagliatelle
     - errname
     - ireturn
+    - exhaustruct
+    - nonamedreturns
+    - nosnakecase
+    - structcheck
+    - varcheck
+    - deadcode
+    - testableexamples
+    - dupword
+    - depguard
+    - tagalign
 
 issues:
   exclude-use-default: false
@@ -48,5 +58,13 @@ issues:
         - noctx
         - funlen
         - dupl
+        - structcheck
+        - unused
+        - unparam
+        - nosnakecase
       path: "_test.go"
+    - linters:
+        - errcheck # Error checking omitted for brevity.
+        - gosec
+      path: "example_"
 
