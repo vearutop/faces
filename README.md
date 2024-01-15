@@ -7,11 +7,22 @@
 ![Code lines](https://sloc.xyz/github/vearutop/faces/?category=code)
 ![Comments](https://sloc.xyz/github/vearutop/faces/?category=comments)
 
-<!--- TODO Update README.md -->
-
-Project template with GitHub actions for Go.
+Face detection HTTP microservice based on [`dlib`](https://github.com/davisking/dlib-models).
 
 ## Usage
 
-Create a new repository from this template, check out it and run `./run_me.sh` to replace template name with name of
-your repository.
+```
+./faces -h
+Usage of ./faces:
+  -listen string
+        listen address (default "localhost:8011")
+```
+
+```
+./faces 
+2024/01/15 23:44:22 recognizer init 424.357089ms
+2024/01/15 23:44:22 http://localhost:8011/docs
+```
+
+This repo contains models, that were created by `Davis King <https://github.com/davisking/dlib-models>`__ and are 
+licensed in the public domain or under CC0 1.0 Universal. See [LICENSE](./LICENSE).

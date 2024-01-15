@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"embed"
+	"flag"
 	"io"
 	"log"
 	"mime/multipart"
@@ -31,10 +32,10 @@ func must[V any](v V, err error) V {
 }
 
 func main() {
-	start := time.Now()
+	listen := flag.String("listen", "localhost:8011", "listen address")
+	flag.Parse()
 
-	// m := must(models.ReadFile("models/dlib_face_recognition_resnet_model_v1.dat"))
-	// println("model len", len(m))
+	start := time.Now()
 
 	if _, err := os.Stat("./models/dlib_face_recognition_resnet_model_v1.dat"); err != nil {
 		if os.IsNotExist(err) {
@@ -82,8 +83,8 @@ func main() {
 	s.Docs("/docs", swgui.New)
 
 	// Start server.
-	log.Println("http://localhost:8011/docs")
-	if err := http.ListenAndServe("localhost:8011", s); err != nil {
+	log.Println("http://" + *listen + "/docs")
+	if err := http.ListenAndServe(*listen, s); err != nil {
 		log.Fatal(err)
 	}
 }
