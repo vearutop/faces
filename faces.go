@@ -1,3 +1,4 @@
+// Package main implements faces app.
 package main
 
 import (
@@ -49,7 +50,7 @@ func main() {
 				"models/shape_predictor_5_face_landmarks.dat",
 			} {
 				f := must(models.Open(fn))
-				d := must(os.Create(fn))
+				d := must(os.Create(fn)) //nolint:gosec
 				must(io.Copy(d, f))
 				must(1, f.Close())
 				must(1, d.Close())
@@ -59,10 +60,7 @@ func main() {
 		}
 	}
 
-	// Init the recognizer.
 	rec := must(face.NewRecognizer("./models"))
-
-	// Free the resources when you're finished.
 	defer rec.Close()
 
 	log.Println("recognizer init", time.Since(start))
@@ -84,8 +82,14 @@ func main() {
 
 	// Start server.
 	log.Println("http://" + *listen + "/docs")
-	if err := http.ListenAndServe(*listen, s); err != nil {
-		log.Fatal(err)
+	server := &http.Server{
+		Addr:              *listen,
+		ReadHeaderTimeout: 3 * time.Second,
+		Handler:           s,
+	}
+
+	if err := server.ListenAndServe(); err != nil {
+		must(1, err)
 	}
 }
 
