@@ -33,6 +33,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install libdlib-dev libblas-dev libatlas-base-dev liblapack-dev libjpeg-turbo8-dev
+          make build
+          ldd ./bin/faces
           make release-assets
       - name: Upload linux_amd64.tar.gz
         if: hashFiles('linux_amd64.tar.gz') != ''

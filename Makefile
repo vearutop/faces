@@ -27,9 +27,9 @@ ifeq ($(DEVGO_PATH),)
 	endif
 endif
 
-BUILD_LDFLAGS=-s -w
+BUILD_LDFLAGS=-s -w -extldflags=-static
 
-export RELEASE_TARGETS="linux/amd64"
+export RELEASE_TARGETS="darwin/amd64"
 
 -include $(DEVGO_PATH)/makefiles/main.mk
 -include $(DEVGO_PATH)/makefiles/lint.mk
