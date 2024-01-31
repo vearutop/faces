@@ -1,0 +1,12 @@
+FROM dlibubuntu as builder
+RUN apt-get install wget git gcc -y
+
+RUN wget https://dl.google.com/go/go1.21.6.linux-amd64.tar.gz
+RUN tar -xf go1.21.6.linux-amd64.tar.gz
+RUN mv go /usr/local
+
+ENV GOROOT /usr/local/go
+ENV GOPATH /go
+ENV PATH $GOPATH/bin:$GOROOT/bin:$PATH
+RUN mkdir $GOPATH
+RUN go mod init foo && go get -u github.com/Kagami/go-face@latest

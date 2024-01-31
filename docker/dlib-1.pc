@@ -1,0 +1,9 @@
+libdir=/usr/lib/x86_64-linux-gnu
+includedir=/usr/include
+
+Name: dlib
+Description: Numerical and networking C++ library
+Version: 19.10.0
+Libs: -L${libdir} -ldlib -lblas -llapack -lgfortran -lquadmath
+Cflags: -I${includedir}
+Requires:

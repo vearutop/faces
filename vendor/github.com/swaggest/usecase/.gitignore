@@ -2,4 +2,4 @@
 /*.coverprofile
 /.vscode
 /bench-*.txt
-/bin
+/vendor

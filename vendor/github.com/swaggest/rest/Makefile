@@ -1,4 +1,4 @@
-#GOLANGCI_LINT_VERSION := "v1.55.2" # Optional configuration to pinpoint golangci-lint version.
+#GOLANGCI_LINT_VERSION := "v1.54.1" # Optional configuration to pinpoint golangci-lint version.
 
 # The head of Makefile determines location of dev-go to include standard targets.
 GO ?= go
@@ -27,18 +27,27 @@ ifeq ($(DEVGO_PATH),)
 	endif
 endif
 
-BUILD_LDFLAGS=-s -w -linkmode 'external' -extldflags '-static'
-
-export RELEASE_TARGETS="darwin/amd64"
+BENCH_COUNT ?= 6
+REF_NAME ?= $(shell git symbolic-ref HEAD --short | tr / - 2>/dev/null)
 
 -include $(DEVGO_PATH)/makefiles/main.mk
 -include $(DEVGO_PATH)/makefiles/lint.mk
 -include $(DEVGO_PATH)/makefiles/test-unit.mk
--include $(DEVGO_PATH)/makefiles/build.mk
--include $(DEVGO_PATH)/makefiles/release-assets.mk
+-include $(DEVGO_PATH)/makefiles/bench.mk
 -include $(DEVGO_PATH)/makefiles/reset-ci.mk
 
 # Add your custom targets here.
 
 ## Run tests
-test: test-unit
+test: test-unit test-examples
+
+test-examples:
+	cd _examples && $(GO) test -race ./...
+
+## Run benchmark for app examples, iterations count controlled by BENCH_COUNT, default 5.
+bench-run-examples:
+	@cd _examples && set -o pipefail && $(GO) test -bench=. -count=$(BENCH_COUNT) -run=^a  ./... | tee ../bench-examples-$(REF_NAME).txt
+
+## Show result of benchmark for app examples.
+bench-stat-examples: bench-stat-cli
+	@test -s bench-examples-master.txt && benchstat bench-examples-master.txt bench-examples-$(REF_NAME).txt || benchstat bench-examples-$(REF_NAME).txt

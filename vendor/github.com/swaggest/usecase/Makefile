@@ -27,15 +27,9 @@ ifeq ($(DEVGO_PATH),)
 	endif
 endif
 
-BUILD_LDFLAGS=-s -w -linkmode 'external' -extldflags '-static'
-
-export RELEASE_TARGETS="darwin/amd64"
-
 -include $(DEVGO_PATH)/makefiles/main.mk
 -include $(DEVGO_PATH)/makefiles/lint.mk
 -include $(DEVGO_PATH)/makefiles/test-unit.mk
--include $(DEVGO_PATH)/makefiles/build.mk
--include $(DEVGO_PATH)/makefiles/release-assets.mk
 -include $(DEVGO_PATH)/makefiles/reset-ci.mk
 
 # Add your custom targets here.
