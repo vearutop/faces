@@ -26,7 +26,6 @@ jobs:
           make docker-build
           docker run -v $PWD:/opt/mount --rm --entrypoint cp vearutop/faces /bin/faces /opt/mount/faces
           tar zcvf ./linux_amd64.tar.gz ./faces
-          ldd ./faces
       - name: Upload linux_amd64.tar.gz
         if: hashFiles('linux_amd64.tar.gz') != ''
         uses: actions/upload-release-asset@v1
