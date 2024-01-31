@@ -42,3 +42,9 @@ export RELEASE_TARGETS="darwin/amd64"
 
 ## Run tests
 test: test-unit
+
+docker-build:
+	docker build -f ./docker/Dockerfile -t vearutop/faces .
+
+docker-push:
+	docker push vearutop/faces
