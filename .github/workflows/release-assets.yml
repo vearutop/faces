@@ -25,12 +25,13 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential cmake wget
+          sudo apt-get remove libjpeg-dev
           mkdir ~/dlib && cd ~/dlib && wget http://dlib.net/files/dlib-19.24.tar.bz2 && tar xf dlib-19.24.tar.bz2
           cd ~/dlib/dlib-19.24 && mkdir build && cd build && cmake .. && cmake --build . --config Release && sudo make install && rm -rf ~/dlib
           sudo cp /usr/local/include/dlib/external/libjpeg/jpeglib.h /usr/include/jpeglib.h 
           sudo cp /usr/local/include/dlib/external/libjpeg/jconfig.h /usr/include/jconfig.h
           sudo cp /usr/local/include/dlib/external/libjpeg/jmorecfg.h /usr/include/jmorecfg.h
-          CGO_LDFLAGS="-static" CGO_ENABLED=1 /usr/local/go/bin/go build .
+          CGO_LDFLAGS="-static" CGO_ENABLED=1 go build .
           ldd ./faces
           ./faces -help
       - name: Upload linux_amd64.tar.gz
