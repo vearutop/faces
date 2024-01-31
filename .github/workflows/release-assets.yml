@@ -25,6 +25,7 @@ jobs:
         run: |
           make docker-build
           docker run -v $PWD:/opt/mount --rm --entrypoint cp vearutop/faces /bin/faces /opt/mount/faces
+          ls -lah
           ldd ./faces
           ./faces -help
       - name: Upload linux_amd64.tar.gz
