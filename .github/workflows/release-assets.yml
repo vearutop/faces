@@ -19,24 +19,20 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: ${{ env.GO_VERSION }}
-      - name: Install Go tip
-        if: env.GO_VERSION == 'tip'
-        run: |
-          curl -sL https://storage.googleapis.com/go-build-snap/go/linux-amd64/$(git ls-remote https://github.com/golang/go.git HEAD | awk '{print $1;}').tar.gz -o gotip.tar.gz
-          ls -lah gotip.tar.gz
-          mkdir -p ~/sdk/gotip
-          tar -C ~/sdk/gotip -xzf gotip.tar.gz
-          ~/sdk/gotip/bin/go version
-          echo "PATH=$HOME/go/bin:$HOME/sdk/gotip/bin/:$PATH" >> $GITHUB_ENV
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Build artifacts
         run: |
           sudo apt-get update
-          sudo apt-get install libdlib-dev libblas-dev libatlas-base-dev liblapack-dev libjpeg-turbo8-dev
-          make build
-          ldd ./bin/faces
-          make release-assets
+          sudo apt-get install -y build-essential cmake wget
+          mkdir ~/dlib && cd ~/dlib && wget http://dlib.net/files/dlib-19.24.tar.bz2 && tar xf dlib-19.24.tar.bz2
+          cd ~/dlib/dlib-19.24 && mkdir build && cd build && cmake .. && cmake --build . --config Release && sudo make install && rm -rf ~/dlib
+          sudo cp /usr/local/include/dlib/external/libjpeg/jpeglib.h /usr/include/jpeglib.h 
+          sudo cp /usr/local/include/dlib/external/libjpeg/jconfig.h /usr/include/jconfig.h
+          sudo cp /usr/local/include/dlib/external/libjpeg/jmorecfg.h /usr/include/jmorecfg.h
+          CGO_LDFLAGS="-static" CGO_ENABLED=1 /usr/local/go/bin/go build .
+          ldd ./faces
+          ./faces -help
       - name: Upload linux_amd64.tar.gz
         if: hashFiles('linux_amd64.tar.gz') != ''
         uses: actions/upload-release-asset@v1
@@ -45,52 +41,3 @@ jobs:
           asset_path: ./linux_amd64.tar.gz
           asset_name: linux_amd64.tar.gz
           asset_content_type: application/tar+gzip
-      - name: Upload linux_amd64_dbg.tar.gz
-        if: hashFiles('linux_amd64_dbg.tar.gz') != ''
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./linux_amd64_dbg.tar.gz
-          asset_name: linux_amd64_dbg.tar.gz
-          asset_content_type: application/tar+gzip
-      - name: Upload linux_arm64.tar.gz
-        if: hashFiles('linux_arm64.tar.gz') != ''
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./linux_arm64.tar.gz
-          asset_name: linux_arm64.tar.gz
-          asset_content_type: application/tar+gzip
-      - name: Upload linux_arm.tar.gz
-        if: hashFiles('linux_arm.tar.gz') != ''
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./linux_arm.tar.gz
-          asset_name: linux_arm.tar.gz
-          asset_content_type: application/tar+gzip
-      - name: Upload darwin_amd64.tar.gz
-        if: hashFiles('darwin_amd64.tar.gz') != ''
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./darwin_amd64.tar.gz
-          asset_name: darwin_amd64.tar.gz
-          asset_content_type: application/tar+gzip
-      - name: Upload darwin_arm64.tar.gz
-        if: hashFiles('darwin_arm64.tar.gz') != ''
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./darwin_arm64.tar.gz
-          asset_name: darwin_arm64.tar.gz
-          asset_content_type: application/tar+gzip
-      - name: Upload windows_amd64.zip
-        if: hashFiles('windows_amd64.zip') != ''
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./windows_amd64.zip
-          asset_name: windows_amd64.zip
-          asset_content_type: application/zip
-
