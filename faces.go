@@ -95,7 +95,7 @@ func main() {
 
 func uploadImage(rec *face.Recognizer) usecase.Interactor {
 	type upload struct {
-		Upload multipart.File `formData:"uploads" description:"JPG image."`
+		Image multipart.File `formData:"image" description:"JPG image."`
 	}
 
 	type output struct {
@@ -105,7 +105,7 @@ func uploadImage(rec *face.Recognizer) usecase.Interactor {
 
 	u := usecase.NewInteractor(func(ctx context.Context, in upload, out *output) (err error) {
 		start := time.Now()
-		imgData, err := io.ReadAll(in.Upload)
+		imgData, err := io.ReadAll(in.Image)
 		if err != nil {
 			return err
 		}
