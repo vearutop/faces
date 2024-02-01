@@ -100,6 +100,7 @@ func uploadImage(rec *face.Recognizer) usecase.Interactor {
 
 	type output struct {
 		ElapsedSec float64     `json:"elapsedSec"`
+		Found      int         `json:"found"`
 		Faces      []face.Face `json:"faces,omitempty"`
 	}
 
@@ -111,6 +112,7 @@ func uploadImage(rec *face.Recognizer) usecase.Interactor {
 		}
 
 		out.Faces, err = rec.Recognize(imgData)
+		out.Found = len(out.Faces)
 		out.ElapsedSec = time.Since(start).Seconds()
 
 		return err

@@ -1,4 +1,4 @@
-FROM ubuntu:20.04 as builder
+FROM ubuntu:22.04 as builder
 
 RUN apt-get update
 RUN apt install tzdata -y
@@ -13,9 +13,9 @@ RUN wget -q https://go.dev/dl/go1.21.6.linux-amd64.tar.gz && tar -C /usr/local -
 
 WORKDIR /app
 ADD . .
-RUN CGO_LDFLAGS="-static" /usr/local/go/bin/go build .
+RUN CGO_LDFLAGS="-static" /usr/local/go/bin/go build -tags static .
 
 FROM alpine
 WORKDIR /root
-ENTRYPOINT ["/bin/faces", "-listen", "0.0.0.0:80"]
+CMD ["/bin/faces", "-listen", "0.0.0.0:80"]
 COPY --from=builder /app/faces /bin/faces
