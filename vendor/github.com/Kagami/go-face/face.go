@@ -174,23 +174,10 @@ func (rec *Recognizer) Recognize(imgData []byte) (faces []Face, err error) {
 	return rec.recognize(0, imgData, 0)
 }
 
-func (rec *Recognizer) RecognizeCNN(imgData []byte) (faces []Face, err error) {
-	return rec.recognize(1, imgData, 0)
-}
-
 // RecognizeSingle returns face if it's the only face on the image or
 // nil otherwise. Only JPEG format is currently supported. Thread-safe.
 func (rec *Recognizer) RecognizeSingle(imgData []byte) (face *Face, err error) {
 	faces, err := rec.recognize(0, imgData, 1)
-	if err != nil || len(faces) != 1 {
-		return
-	}
-	face = &faces[0]
-	return
-}
-
-func (rec *Recognizer) RecognizeSingleCNN(imgData []byte) (face *Face, err error) {
-	faces, err := rec.recognize(1, imgData, 1)
 	if err != nil || len(faces) != 1 {
 		return
 	}
@@ -203,22 +190,9 @@ func (rec *Recognizer) RecognizeFile(imgPath string) (faces []Face, err error) {
 	return rec.recognizeFile(0, imgPath, 0)
 }
 
-func (rec *Recognizer) RecognizeFileCNN(imgPath string) (faces []Face, err error) {
-	return rec.recognizeFile(1, imgPath, 0)
-}
-
 // Same as RecognizeSingle but accepts image path instead.
 func (rec *Recognizer) RecognizeSingleFile(imgPath string) (face *Face, err error) {
 	faces, err := rec.recognizeFile(0, imgPath, 1)
-	if err != nil || len(faces) != 1 {
-		return
-	}
-	face = &faces[0]
-	return
-}
-
-func (rec *Recognizer) RecognizeSingleFileCNN(imgPath string) (face *Face, err error) {
-	faces, err := rec.recognizeFile(1, imgPath, 1)
 	if err != nil || len(faces) != 1 {
 		return
 	}

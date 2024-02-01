@@ -33,8 +33,6 @@ template <long num_filters, typename SUBNET> using con5  = con<num_filters,5,5,1
 template <typename SUBNET> using downsampler  = relu<affine<con5d<32, relu<affine<con5d<32, relu<affine<con5d<16,SUBNET>>>>>>>>>;
 template <typename SUBNET> using rcon5  = relu<affine<con5<45,SUBNET>>>;
 
-using cnn_anet_type = loss_mmod<con<1,9,9,1,1,rcon5<rcon5<rcon5<downsampler<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>;
-
 using anet_type = loss_metric<fc_no_bias<128,avg_pool_everything<
                             alevel0<
                             alevel1<
@@ -65,11 +63,9 @@ public:
 		std::string dir = model_dir;
 		std::string shape_predictor_path = dir + "/shape_predictor_5_face_landmarks.dat";
 		std::string resnet_path = dir + "/dlib_face_recognition_resnet_model_v1.dat";
-		std::string cnn_resnet_path = dir + "/mmod_human_face_detector.dat";
 
 		deserialize(shape_predictor_path) >> sp_;
 		deserialize(resnet_path) >> net_;
-		deserialize(cnn_resnet_path) >> cnn_net_;
 
 		jittering = 0;
 		size = 150;
@@ -82,16 +78,8 @@ public:
 		std::vector<descriptor> descrs;
 		std::vector<full_object_detection> shapes;
 
-		if(type == 0) {
-			std::lock_guard<std::mutex> lock(detector_mutex_);
-			rects = detector_(img);
-		} else{
-			std::lock_guard<std::mutex> lock(cnn_net_mutex_);
-			auto dets = cnn_net_(img);
-            for (auto&& d : dets) {
-                rects.push_back(d.rect);
-            }
-		}
+        std::lock_guard<std::mutex> lock(detector_mutex_);
+        rects = detector_(img);
 
 		// Short circuit.
 		if (rects.size() == 0 || (max_faces > 0 && rects.size() > (size_t)max_faces))
@@ -134,12 +122,10 @@ public:
 private:
 	std::mutex detector_mutex_;
 	std::mutex net_mutex_;
-	std::mutex cnn_net_mutex_;
 	std::shared_mutex samples_mutex_;
 	frontal_face_detector detector_;
 	shape_predictor sp_;
 	anet_type net_;
-	cnn_anet_type cnn_net_;
 	std::vector<descriptor> samples_;
 	std::vector<int> cats_;
 	int jittering;
