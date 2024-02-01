@@ -19,7 +19,7 @@ wget https://github.com/vearutop/faces/releases/latest/download/linux_amd64.tar.
 It is also available as docker image.
 
 ```
-docker run --rm -p 80:80 vearutop/faces
+docker run --rm -p 8011:80 vearutop/faces
 ```
 
 If you want to build the app from source, please follow the instructions on
@@ -37,16 +37,16 @@ Usage of ./faces:
 Start server.
 
 ```
-./faces -listen :80
+./faces
 2024/01/15 23:44:22 recognizer init 424.357089ms
-2024/01/15 23:44:22 http://localhost:8011/docs
+2024/01/15 23:44:22 http://localhost:80/docs
 ```
 
 Send request.
 
 ```
 curl -X 'POST' \
-  'http://localhost/image' \
+  'http://localhost:8011/image' \
   -H 'accept: application/json' \
   -H 'Content-Type: multipart/form-data' \
   -F 'image=@faces.jpg;type=image/jpeg'
